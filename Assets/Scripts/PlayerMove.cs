@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -53,5 +54,20 @@ public class PlayerMove : MonoBehaviour
         velocity.y += gravity * Time.deltaTime; // Set our regular gravity
 
         charController.Move(velocity * Time.deltaTime); // Apply our gravity to our character controller
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+
+        bool isLastLevel = currentScene.name != "Level 2";
+        if (isLastLevel)
+        {
+            SceneManager.LoadScene(currentScene.buildIndex + 1);
+        }
+        else
+        {
+            SceneManager.LoadScene("Menu");
+        }
     }
 }

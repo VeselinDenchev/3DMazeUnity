@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerRotate : MonoBehaviour
 {
-    public float rotationSensitivity = 750f; // Made public so it can be accessed by other scripts
+    public float rotationSensitivity = 1_000f; // Made public so it can be accessed by other scripts
     public Transform playerBody; // The transform of our player body/mesh
     float xRotation = 0f; // Define our x rotation variable
     [SerializeField] private float clampDegreeUp = 70f; // How far the player can look up. Change to 90 for straight up
