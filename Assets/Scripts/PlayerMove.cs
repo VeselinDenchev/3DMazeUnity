@@ -59,9 +59,9 @@ public class PlayerMove : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Scene currentScene = SceneManager.GetActiveScene();
-        int sceneCountInBuildSettings = SceneManager.sceneCountInBuildSettings;
+        int levelsCount = SceneManager.sceneCountInBuildSettings - 1; // Subtract 1 because we don't count the Menu scene
 
-        bool isLastLevel = currentScene.name != $"Level {sceneCountInBuildSettings}";
+        bool isLastLevel = currentScene.name != $"Level {levelsCount}";
         if (isLastLevel)
         {
             SceneManager.LoadScene(currentScene.buildIndex + 1);
