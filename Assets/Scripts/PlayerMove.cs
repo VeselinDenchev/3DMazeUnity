@@ -21,6 +21,9 @@ public class PlayerMove : MonoBehaviour
     Vector3 velocity;
     public bool grounded; // Defines is the player is touching the ground
 
+    public AudioSource walkSound;
+    public AudioSource runSound;
+
     private void Update() // Called once per frame
     {
         grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask); // Checks if our player is touching an object with a "Ground" layer and sets the boolean accordingly
@@ -54,6 +57,31 @@ public class PlayerMove : MonoBehaviour
         velocity.y += gravity * Time.deltaTime; // Set our regular gravity
 
         charController.Move(velocity * Time.deltaTime); // Apply our gravity to our character controller
+
+        bool isJumping = Input.GetKey(KeyCode.Space);
+        if (!isJumping)
+        {
+            // Moving sounds
+            bool isMovingForward = Input.GetKey(KeyCode.W);
+            bool isMovingLeft = Input.GetKey(KeyCode.A);
+            bool isMovingBackwards = Input.GetKey(KeyCode.S);
+            bool isMovingRight = Input.GetKey(KeyCode.D);
+
+            bool isMoving = isMovingForward || isMovingLeft || isMovingBackwards || isMovingRight;
+            if (isMoving)
+            {
+
+                bool isRunning = Input.GetKey(KeyCode.LeftShift);
+
+                walkSound.enabled = !isRunning;
+                runSound.enabled = isRunning;
+            }
+            else
+            {
+                walkSound.enabled = false;
+                runSound.enabled = false;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
