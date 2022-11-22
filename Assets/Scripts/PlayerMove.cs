@@ -96,7 +96,7 @@ public class PlayerMove : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("Menu");
+            SceneManager.LoadScene("Main menu");
         }
     }
 }
