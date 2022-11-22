@@ -742,7 +742,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.40925938, y: 0.21930939}
   m_AnchorMax: {x: 0.5903516, y: 0.30620626}
-  m_AnchoredPosition: {x: 0.5, y: -124.33478}
+  m_AnchoredPosition: {x: -2, y: -160}
   m_SizeDelta: {x: 1, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &117173162
@@ -791,7 +791,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 129389923}
         m_TargetAssemblyTypeName: CanvasScript, Assembly-CSharp
-        m_MethodName: PressPlay
+        m_MethodName: PressQuit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4371,8 +4371,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.386, y: 0.81248426}
   m_AnchorMax: {x: 0.6141297, y: 0.9568969}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.000030517578}
+  m_SizeDelta: {x: 293.19, y: 72.466}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &390074778
 MonoBehaviour:
@@ -4421,7 +4421,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 116.3
+  m_fontSize: 181.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9410,7 +9410,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1168641439}
   m_LocalRotation: {x: 0.70710665, y: -0, z: -0, w: 0.70710695}
-  m_LocalPosition: {x: 51.43, y: 26.672138, z: 47.89}
+  m_LocalPosition: {x: 51.43, y: 26.67, z: 49.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14948,7 +14948,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.40925938, y: 0.21930939}
   m_AnchorMax: {x: 0.5903516, y: 0.30620626}
-  m_AnchoredPosition: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -2.0000153, y: -35.665222}
   m_SizeDelta: {x: 1, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1771181377
