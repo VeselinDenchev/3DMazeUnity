@@ -1149,6 +1149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 284991ad0117eb641bdf5eebe267035d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activeSceneName: 
+  pauseMenuUI: {fileID: 129389918}
 --- !u!1 &129628912
 GameObject:
   m_ObjectHideFlags: 0
@@ -14996,7 +14998,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 129389923}
-        m_TargetAssemblyTypeName: CanvasScript, Assembly-CSharp
+        m_TargetAssemblyTypeName: MenuCanvas, Assembly-CSharp
         m_MethodName: PressPlay
         m_Mode: 1
         m_Arguments:

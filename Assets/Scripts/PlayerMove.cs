@@ -26,60 +26,70 @@ public class PlayerMove : MonoBehaviour
 
     private void Update() // Called once per frame
     {
-        grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask); // Checks if our player is touching an object with a "Ground" layer and sets the boolean accordingly
-
-        if (grounded && velocity.y < 0) // If the player is grounded
+        if (MenuCanvas.isPaused)
         {
-            velocity.y = -2f; // Set the downward velocity to 2
-        }
-
-        if (Input.GetKey(KeyCode.LeftShift)) // If the left shift button is being pressed
-        {
-            speed = runSpeed; // Set our speed to runSpeed
+            walkSound.Pause();
+            runSound.Pause();
         }
         else
         {
-            speed = walkSpeed;// Set our speed to walkSpeed
-        }
+            walkSound.UnPause();
+            runSound.UnPause();
 
-        float x = Input.GetAxis("Horizontal"); // Define an X variable and set it to Unity's "Horizontal" axis
-        float z = Input.GetAxis("Vertical"); // Define a Y variable and set it to Unity's "Vertical" axis
+            grounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask); // Checks if our player is touching an object with a "Ground" layer and sets the boolean accordingly
 
-        Vector3 move = transform.right * x + transform.forward * z; // Define our move vector
-
-        charController.Move(move * speed * Time.deltaTime); // Move our character controller based on our set inputs
-
-        if (Input.GetButtonDown("Jump") && grounded && canJump) // Unity's default input for "Jump" is the space key
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity); // Set our jumping gravity
-        }
-
-        velocity.y += gravity * Time.deltaTime; // Set our regular gravity
-
-        charController.Move(velocity * Time.deltaTime); // Apply our gravity to our character controller
-
-        bool isJumping = Input.GetKey(KeyCode.Space);
-        if (!isJumping)
-        {
-            // Moving sounds
-            bool isMovingForward = Input.GetKey(KeyCode.W);
-            bool isMovingLeft = Input.GetKey(KeyCode.A);
-            bool isMovingBackwards = Input.GetKey(KeyCode.S);
-            bool isMovingRight = Input.GetKey(KeyCode.D);
-
-            bool isMoving = isMovingForward || isMovingLeft || isMovingBackwards || isMovingRight;
-            if (isMoving)
+            if (grounded && velocity.y < 0) // If the player is grounded
             {
+                velocity.y = -2f; // Set the downward velocity to 2
+            }
 
-                bool isRunning = Input.GetKey(KeyCode.LeftShift);
-
-                walkSound.enabled = !isRunning;
-                runSound.enabled = isRunning;
+            if (Input.GetKey(KeyCode.LeftShift)) // If the left shift button is being pressed
+            {
+                speed = runSpeed; // Set our speed to runSpeed
             }
             else
             {
-                walkSound.enabled = false;
-                runSound.enabled = false;
+                speed = walkSpeed;// Set our speed to walkSpeed
+            }
+
+            float x = Input.GetAxis("Horizontal"); // Define an X variable and set it to Unity's "Horizontal" axis
+            float z = Input.GetAxis("Vertical"); // Define a Y variable and set it to Unity's "Vertical" axis
+
+            Vector3 move = transform.right * x + transform.forward * z; // Define our move vector
+
+            charController.Move(move * speed * Time.deltaTime); // Move our character controller based on our set inputs
+
+            if (Input.GetButtonDown("Jump") && grounded && canJump) // Unity's default input for "Jump" is the space key
+            {
+                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity); // Set our jumping gravity
+            }
+
+            velocity.y += gravity * Time.deltaTime; // Set our regular gravity
+
+            charController.Move(velocity * Time.deltaTime); // Apply our gravity to our character controller
+
+            bool isJumping = Input.GetKey(KeyCode.Space);
+            if (!isJumping)
+            {
+                // Moving sounds
+                bool isMovingForward = Input.GetKey(KeyCode.W);
+                bool isMovingLeft = Input.GetKey(KeyCode.A);
+                bool isMovingBackwards = Input.GetKey(KeyCode.S);
+                bool isMovingRight = Input.GetKey(KeyCode.D);
+
+                bool isMoving = isMovingForward || isMovingLeft || isMovingBackwards || isMovingRight;
+                if (isMoving)
+                {
+                    bool isRunning = Input.GetKey(KeyCode.LeftShift);
+
+                    walkSound.enabled = !isRunning;
+                    runSound.enabled = isRunning;
+                }
+                else
+                {
+                    walkSound.enabled = false;
+                    runSound.enabled = false;
+                }
             }
         }
     }
@@ -96,7 +106,7 @@ public class PlayerMove : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("Main menu");
+            SceneManager.LoadScene("Main Menu");
         }
     }
 }
