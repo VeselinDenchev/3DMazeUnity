@@ -26,7 +26,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Update() // Called once per frame
     {
-        if (MenuCanvas.isPaused)
+        if (GameManager.isPaused)
         {
             walkSound.Pause();
             runSound.Pause();
@@ -94,19 +94,5 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Scene currentScene = SceneManager.GetActiveScene();
-        int levelsCount = SceneManager.sceneCountInBuildSettings - 1; // Subtract 1 because we don't count the Menu scene
-
-        bool isLastLevel = currentScene.name != $"Level {levelsCount}";
-        if (isLastLevel)
-        {
-            SceneManager.LoadScene(currentScene.buildIndex + 1);
-        }
-        else
-        {
-            SceneManager.LoadScene("Main Menu");
-        }
-    }
+    private void OnTriggerEnter(Collider other) => GameManager.GoToNextLevel();
 }

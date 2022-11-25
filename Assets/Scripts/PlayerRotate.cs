@@ -18,13 +18,16 @@ public class PlayerRotate : MonoBehaviour
 
     private void Update() // Called once per frame
     {
-        float mouseX = Input.GetAxis("Mouse X") * rotationSensitivity * Time.deltaTime; // Gets the horizontal mouse input
-        float mouseY = Input.GetAxis("Mouse Y") * rotationSensitivity * Time.deltaTime; // Gets the vertical mouse input
+        if (!GameManager.isPaused)
+        {
+            float mouseX = Input.GetAxis("Mouse X") * rotationSensitivity * Time.deltaTime; // Gets the horizontal mouse input
+            float mouseY = Input.GetAxis("Mouse Y") * rotationSensitivity * Time.deltaTime; // Gets the vertical mouse input
 
-        xRotation -= mouseY; // Our x rotation variable equals our vertical mouse input multiplied by -1
-        xRotation = Mathf.Clamp(xRotation, clampDegreeDown, clampDegreeUp); // Clamp our x rotation by a minimum and maximum value (How far the player can look up and down in degrees)
+            xRotation -= mouseY; // Our x rotation variable equals our vertical mouse input multiplied by -1
+            xRotation = Mathf.Clamp(xRotation, clampDegreeDown, clampDegreeUp); // Clamp our x rotation by a minimum and maximum value (How far the player can look up and down in degrees)
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Implement the local rotation of the camera using our x rotation variable
-        playerBody.Rotate(Vector3.up * mouseX); // Rotate our player body/mesh on the Y axis based on the horizontal mouse input
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // Implement the local rotation of the camera using our x rotation variable
+            playerBody.Rotate(Vector3.up * mouseX); // Rotate our player body/mesh on the Y axis based on the horizontal mouse input
+        }
     }
 }
