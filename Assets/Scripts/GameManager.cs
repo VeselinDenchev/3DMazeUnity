@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static bool isPaused = false;
-    public static GameObject pauseMenuUI;
+    public GameObject pauseMenuUI;
 
     public static void GoToNextLevel()
     {
