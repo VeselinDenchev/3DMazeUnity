@@ -1,12 +1,18 @@
 using System;
+using System.Collections;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    private static GameManager instance = null;
+
     public static bool isPaused = false;
     public GameObject pauseMenuUI;
+
+    public GameObject loadingScreen;
 
     public static void GoToNextLevel()
     {
@@ -15,15 +21,18 @@ public class GameManager : MonoBehaviour
         bool isLastLevel = activeSceneBuildIndex + 1 == SceneManager.sceneCountInBuildSettings;
         if (!isLastLevel)
         {
-            SceneManager.LoadScene(activeSceneBuildIndex + 1);
+            instance.LoadScene(activeSceneBuildIndex + 1);
         }
         else
         {
-            GoToMainMenu();
+            instance.GoToMainMenu();
         }
     }
 
-    public void PressPlay() => SceneManager.LoadScene("Level 1"); // Load Level 1 scene
+    public void PressPlay()
+    {
+        instance.LoadScene(1); // Load Level 1 scene 
+    }
 
     public void PressRestart()
     {
@@ -40,7 +49,15 @@ public class GameManager : MonoBehaviour
         isPaused = !isPaused;
         pauseMenuUI.SetActive(isPaused);
         Time.timeScale = Convert.ToSingle(!isPaused); // false = 0 | true = 1
-        Start();
+
+        if (isPaused)
+        {
+            EnableMouseCursor();
+        }
+        else
+        {
+            DisableMouseCursor();
+        }
     }
 
     public void PressMainMenu()
@@ -49,10 +66,23 @@ public class GameManager : MonoBehaviour
         GoToMainMenu();
     }
 
+    void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.None; // Unlocks the cursor from the middle of the screen
-        Cursor.visible = true; // Makes the cursor visible
+        int activeSceenBuildIndex = GetActiveSceneBuildIndex();
+        bool isMainMenu = activeSceenBuildIndex == 0;
+        if (isMainMenu)
+        {
+            EnableMouseCursor();
+        }
+        else
+        {
+            DisableMouseCursor();
+        }
     }
 
     private void Update()
@@ -65,11 +95,49 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private static void GoToMainMenu() => SceneManager.LoadScene("Main Menu");
+    private void LoadScene(int sceneBuildIndex)
+    {
+        instance.StartCoroutine(instance.LoadSceneAsync(sceneBuildIndex));
+    }
 
-    private static void RestartLevel(int activeSceneBuildIndex) => SceneManager.LoadScene(activeSceneBuildIndex);
+    private IEnumerator LoadSceneAsync(int sceneBuildIndex)
+    {
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneBuildIndex);
+
+        instance.loadingScreen.SetActive(true);
+        LockMouse();
+
+        while (!asyncOperation.isDone) yield return null;
+
+        instance.loadingScreen.SetActive(false);
+        UnlockMouse();
+    }
+
+    private void GoToMainMenu() => SceneManager.LoadScene(0);
+
+    private static void RestartLevel(int activeSceneBuildIndex) 
+    {
+        instance.LoadScene(activeSceneBuildIndex);
+        Debug.Log(instance);
+    }
 
     private static string GetActiveSceneName() => SceneManager.GetActiveScene().name;
 
     private static int GetActiveSceneBuildIndex() => SceneManager.GetActiveScene().buildIndex;
+
+    private static void EnableMouseCursor()
+    {
+        UnlockMouse();
+        Cursor.visible = true;
+    }
+
+    private static void DisableMouseCursor()
+    {
+        LockMouse();
+        Cursor.visible = false;
+    }
+
+    private static void LockMouse() => Cursor.lockState = CursorLockMode.Locked;
+
+    private static void UnlockMouse() => Cursor.lockState = CursorLockMode.None;
 }
