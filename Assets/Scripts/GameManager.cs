@@ -73,25 +73,20 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        int activeSceenBuildIndex = GetActiveSceneBuildIndex();
-        bool isMainMenu = activeSceenBuildIndex == 0;
-        if (isMainMenu)
-        {
-            EnableMouseCursor();
-        }
-        else
-        {
-            DisableMouseCursor();
-        }
+        string activeSceneName = GetActiveSceneName();
+        EnableMouseCursor();
     }
 
     private void Update()
     {
         string activeSceneName = GetActiveSceneName();
 
-        if (activeSceneName != "Main Menu" && Input.GetKeyDown(KeyCode.Escape))
+        if (activeSceneName != "Main menu" && Input.GetKeyDown(KeyCode.Escape))
         {
-            PauseToggle();
+            if (!isPaused)
+            {
+                PauseToggle();
+            }
         }
     }
 
@@ -113,12 +108,15 @@ public class GameManager : MonoBehaviour
         UnlockMouse();
     }
 
-    private void GoToMainMenu() => SceneManager.LoadScene(0);
+    private void GoToMainMenu()
+    {
+        SceneManager.LoadScene(0);
+        EnableMouseCursor();
+    }
 
     private static void RestartLevel(int activeSceneBuildIndex) 
     {
         instance.LoadScene(activeSceneBuildIndex);
-        Debug.Log(instance);
     }
 
     private static string GetActiveSceneName() => SceneManager.GetActiveScene().name;
