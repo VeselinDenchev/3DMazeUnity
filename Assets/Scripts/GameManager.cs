@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance = null;
 
+    public GameObject mainMenu;
+
     public static bool isPaused = false;
     public GameObject pauseMenuUI;
 
@@ -32,6 +34,7 @@ public class GameManager : MonoBehaviour
     public void PressPlay()
     {
         instance.LoadScene(1); // Load Level 1 scene 
+        mainMenu.SetActive(false);
     }
 
     public void PressRestart()
