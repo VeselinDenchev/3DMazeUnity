@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
 
     public GameObject loadingScreen;
 
+    public AudioSource ambientSound;
+
+    public AudioSource christmasSongs;
+
     public static void GoToNextLevel()
     {
         int activeSceneBuildIndex = GetActiveSceneBuildIndex();
@@ -55,10 +59,26 @@ public class GameManager : MonoBehaviour
 
         if (isPaused)
         {
+            ambientSound.Pause();
+
+            string activeSceneName = GetActiveSceneName();
+            if (activeSceneName == "Level 3")
+            {
+                christmasSongs.Pause();
+            }
+
             EnableMouseCursor();
         }
         else
         {
+            ambientSound.UnPause();
+
+            string activeSceneName = GetActiveSceneName();
+            if (activeSceneName == "Level 3")
+            {
+                christmasSongs.UnPause();
+            }
+
             DisableMouseCursor();
         }
     }

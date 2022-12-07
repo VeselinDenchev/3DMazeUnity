@@ -45525,8 +45525,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 284991ad0117eb641bdf5eebe267035d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainMenu: {fileID: 0}
   pauseMenuUI: {fileID: 686396852}
   loadingScreen: {fileID: 2184106809003852177}
+  ambientSound: {fileID: 207738981}
+  christmasSongs: {fileID: 0}
 --- !u!114 &867364627
 MonoBehaviour:
   m_ObjectHideFlags: 0
