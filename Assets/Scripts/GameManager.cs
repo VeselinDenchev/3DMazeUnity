@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,26 +15,20 @@ public class GameManager : MonoBehaviour
     public static bool isPaused = false;
     public GameObject pauseMenuUI;
 
+    public GameObject levelStartText;
+    public int levelStartTextSeconds;
+
+    public GameObject levelCompletedText;
+    public int levelCompletedDelaySeconds;
+    public static bool levelIsCompleted = false;
+
     public GameObject loadingScreen;
 
     public AudioSource ambientSound;
 
     public AudioSource christmasSongs;
 
-    public static void GoToNextLevel()
-    {
-        int activeSceneBuildIndex = GetActiveSceneBuildIndex();
-
-        bool isLastLevel = activeSceneBuildIndex + 1 == SceneManager.sceneCountInBuildSettings;
-        if (!isLastLevel)
-        {
-            instance.LoadScene(activeSceneBuildIndex + 1);
-        }
-        else
-        {
-            instance.GoToMainMenu();
-        }
-    }
+    public static void GoToNextLevel() => instance.StartCoroutine(instance.CompleteLevel());
 
     public void PressPlay()
     {
@@ -53,33 +48,36 @@ public class GameManager : MonoBehaviour
 
     public void PauseToggle()
     {
-        isPaused = !isPaused;
-        pauseMenuUI.SetActive(isPaused);
-        Time.timeScale = Convert.ToSingle(!isPaused); // false = 0 | true = 1
-
-        if (isPaused)
+        if (!levelIsCompleted)
         {
-            ambientSound.Pause();
+            isPaused = !isPaused;
+            pauseMenuUI.SetActive(isPaused);
+            Time.timeScale = Convert.ToSingle(!isPaused); // false = 0 | true = 1
 
-            string activeSceneName = GetActiveSceneName();
-            if (activeSceneName == "Level 3")
+            if (isPaused)
             {
-                christmasSongs.Pause();
+                ambientSound.Pause();
+
+                string activeSceneName = GetActiveSceneName();
+                if (activeSceneName == "Level 3")
+                {
+                    christmasSongs.Pause();
+                }
+
+                EnableMouseCursor();
             }
-
-            EnableMouseCursor();
-        }
-        else
-        {
-            ambientSound.UnPause();
-
-            string activeSceneName = GetActiveSceneName();
-            if (activeSceneName == "Level 3")
+            else
             {
-                christmasSongs.UnPause();
-            }
+                ambientSound.UnPause();
 
-            DisableMouseCursor();
+                string activeSceneName = GetActiveSceneName();
+                if (activeSceneName == "Level 3")
+                {
+                    christmasSongs.UnPause();
+                }
+
+                DisableMouseCursor();
+            }
         }
     }
 
@@ -89,9 +87,15 @@ public class GameManager : MonoBehaviour
         GoToMainMenu();
     }
 
-    void Awake()
+    private void Awake()
     {
         instance = this;
+
+        string activeSceneName = GetActiveSceneName();
+        if (activeSceneName != "Main menu")
+        {
+            instance.StartCoroutine(instance.ShowLevelStartText());
+        }
     }
 
     private void Start()
@@ -126,14 +130,44 @@ public class GameManager : MonoBehaviour
         LockMouse();
 
         while (!asyncOperation.isDone) yield return null;
+    }
 
-        instance.loadingScreen.SetActive(false);
-        UnlockMouse();
+    private IEnumerator CompleteLevel()
+    {
+        levelCompletedText.SetActive(true);
+        levelIsCompleted = true;
+
+        yield return new WaitForSeconds(levelCompletedDelaySeconds);
+
+        levelCompletedText.SetActive(false);
+
+        int activeSceneBuildIndex = GetActiveSceneBuildIndex();
+
+        bool isLastLevel = activeSceneBuildIndex + 1 == SceneManager.sceneCountInBuildSettings;
+        if (!isLastLevel)
+        {
+            instance.LoadScene(activeSceneBuildIndex + 1);
+        }
+        else
+        {
+            instance.GoToMainMenu();
+        }
+
+        levelIsCompleted = false;
+    }
+
+    private IEnumerator ShowLevelStartText()
+    {
+        levelStartText.SetActive(true);
+
+        yield return new WaitForSeconds(levelStartTextSeconds);
+
+        levelStartText.SetActive(false);
     }
 
     private void GoToMainMenu()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Main menu");
         EnableMouseCursor();
     }
 
