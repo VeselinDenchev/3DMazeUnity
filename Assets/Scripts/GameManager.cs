@@ -34,13 +34,13 @@ public class GameManager : MonoBehaviour
 
     public void PressPlay()
     {
-        instance.LoadScene(1); // Load Level 1 scene 
+        this.LoadScene(1); // Load Level 1 scene 
         mainMenu.SetActive(false);
     }
 
     public void PressRestart()
     {
-        PauseToggle();
+        this.PauseToggle();
 
         int activeSceneBuildIndex = GetActiveSceneBuildIndex();
         RestartLevel(activeSceneBuildIndex);
@@ -51,17 +51,17 @@ public class GameManager : MonoBehaviour
     public void PauseToggle()
     {
         isPaused = !isPaused;
-        pauseMenuUI.SetActive(isPaused);
+        this.pauseMenuUI.SetActive(isPaused);
         Time.timeScale = Convert.ToSingle(!isPaused); // false = 0 | true = 1
 
         if (isPaused)
         {
-            ambientSound.Pause();
+            this.ambientSound.Pause();
 
             string activeSceneName = GetActiveSceneName();
             if (activeSceneName == "Level 3")
             {
-                christmasSongs.Pause();
+                this.christmasSongs.Pause();
             }
 
             EnableMouseCursor();
@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
         string activeSceneName = GetActiveSceneName();
         if (activeSceneName != "Main menu")
         {
-            instance.StartCoroutine(instance.ShowLevelStartText());
+            base.StartCoroutine(this.ShowLevelStartText());
         }
     }
 
@@ -109,23 +109,23 @@ public class GameManager : MonoBehaviour
 
         if (activeSceneName != "Main menu" && Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!isPaused && !instance.levelIsCompleted)
+            if (!isPaused && !this.levelIsCompleted)
             {
-                PauseToggle();
+                this.PauseToggle();
             }
         }
     }
 
     private void LoadScene(int sceneBuildIndex)
     {
-        instance.StartCoroutine(instance.LoadSceneAsync(sceneBuildIndex));
+        base.StartCoroutine(this.LoadSceneAsync(sceneBuildIndex));
     }
 
     private IEnumerator LoadSceneAsync(int sceneBuildIndex)
     {
         AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneBuildIndex);
 
-        instance.loadingScreen.SetActive(true);
+        this.loadingScreen.SetActive(true);
         LockMouse();
 
         while (!asyncOperation.isDone) yield return null;
@@ -133,48 +133,59 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator CompleteLevel()
     {
-        levelCompletedText.SetActive(true);
-        instance.levelIsCompleted = true;
+        this.levelCompletedText.SetActive(true);
+        this.levelIsCompleted = true;
 
         yield return instance.StartCoroutine(instance.WaitForLevelToLoad());
 
-        levelCompletedText.SetActive(false);
+        this.levelCompletedText.SetActive(false);
 
         int activeSceneBuildIndex = GetActiveSceneBuildIndex();
 
         bool isLastLevel = activeSceneBuildIndex + 1 == SceneManager.sceneCountInBuildSettings;
         if (!isLastLevel)
         {
-            instance.LoadScene(activeSceneBuildIndex + 1);
+            this.LoadScene(activeSceneBuildIndex + 1);
         }
         else
         {
-            instance.GoToMainMenu();
+            this.GoToMainMenu();
         }
     }
 
     private IEnumerator ShowLevelStartText()
     {
-        levelStartText.SetActive(true);
+        this.levelStartText.SetActive(true);
 
-        yield return new WaitForSeconds(levelStartTextSeconds);
+        yield return new WaitForSeconds(this.levelStartTextSeconds);
 
-        levelStartText.SetActive(false);
+        this.levelStartText.SetActive(false);
     }
 
     private IEnumerator WaitForLevelToLoad()
     {
-        yield return new WaitForSeconds(levelCompletedDelaySeconds);
+        yield return new WaitForSeconds(this.levelCompletedDelaySeconds);
     }
 
     private void GoToMainMenu()
     {
-        SceneManager.LoadScene("Main menu");
+        this.LoadScene(0);
+
+        if (this.levelStartText.activeSelf)
+        {
+            this.levelStartText.SetActive(false);
+        }
+
         EnableMouseCursor();
     }
 
     private static void RestartLevel(int activeSceneBuildIndex) 
     {
+        if (instance.levelStartText.activeSelf)
+        {
+            instance.levelStartText.SetActive(false);
+        }
+
         instance.LoadScene(activeSceneBuildIndex);
     }
 
