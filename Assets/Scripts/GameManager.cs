@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance = null;
+    private bool levelIsCompleted = false;
 
     public GameObject mainMenu;
 
@@ -20,7 +21,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject levelCompletedText;
     public int levelCompletedDelaySeconds;
-    public static bool levelIsCompleted = false;
+
+    public static bool levelIsCompletedStatic => instance.levelIsCompleted;
 
     public GameObject loadingScreen;
 
@@ -48,36 +50,33 @@ public class GameManager : MonoBehaviour
 
     public void PauseToggle()
     {
-        if (!levelIsCompleted)
+        isPaused = !isPaused;
+        pauseMenuUI.SetActive(isPaused);
+        Time.timeScale = Convert.ToSingle(!isPaused); // false = 0 | true = 1
+
+        if (isPaused)
         {
-            isPaused = !isPaused;
-            pauseMenuUI.SetActive(isPaused);
-            Time.timeScale = Convert.ToSingle(!isPaused); // false = 0 | true = 1
+            ambientSound.Pause();
 
-            if (isPaused)
+            string activeSceneName = GetActiveSceneName();
+            if (activeSceneName == "Level 3")
             {
-                ambientSound.Pause();
-
-                string activeSceneName = GetActiveSceneName();
-                if (activeSceneName == "Level 3")
-                {
-                    christmasSongs.Pause();
-                }
-
-                EnableMouseCursor();
+                christmasSongs.Pause();
             }
-            else
+
+            EnableMouseCursor();
+        }
+        else
+        {
+            ambientSound.UnPause();
+
+            string activeSceneName = GetActiveSceneName();
+            if (activeSceneName == "Level 3")
             {
-                ambientSound.UnPause();
-
-                string activeSceneName = GetActiveSceneName();
-                if (activeSceneName == "Level 3")
-                {
-                    christmasSongs.UnPause();
-                }
-
-                DisableMouseCursor();
+                christmasSongs.UnPause();
             }
+
+            DisableMouseCursor();
         }
     }
 
@@ -110,7 +109,7 @@ public class GameManager : MonoBehaviour
 
         if (activeSceneName != "Main menu" && Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!isPaused)
+            if (!isPaused && !instance.levelIsCompleted)
             {
                 PauseToggle();
             }
@@ -135,9 +134,9 @@ public class GameManager : MonoBehaviour
     private IEnumerator CompleteLevel()
     {
         levelCompletedText.SetActive(true);
-        levelIsCompleted = true;
+        instance.levelIsCompleted = true;
 
-        yield return new WaitForSeconds(levelCompletedDelaySeconds);
+        yield return instance.StartCoroutine(instance.WaitForLevelToLoad());
 
         levelCompletedText.SetActive(false);
 
@@ -152,8 +151,6 @@ public class GameManager : MonoBehaviour
         {
             instance.GoToMainMenu();
         }
-
-        levelIsCompleted = false;
     }
 
     private IEnumerator ShowLevelStartText()
@@ -163,6 +160,11 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(levelStartTextSeconds);
 
         levelStartText.SetActive(false);
+    }
+
+    private IEnumerator WaitForLevelToLoad()
+    {
+        yield return new WaitForSeconds(levelCompletedDelaySeconds);
     }
 
     private void GoToMainMenu()
