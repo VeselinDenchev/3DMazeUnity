@@ -118,6 +118,13 @@ public class GameManager : MonoBehaviour
 
     private void LoadScene(int sceneBuildIndex)
     {
+        string activeSceneName = GetActiveSceneName();
+
+        if (activeSceneName != "Main menu" && isPaused)
+        {
+            this.pauseMenuUI.SetActive(false);
+        }
+
         base.StartCoroutine(this.LoadSceneAsync(sceneBuildIndex));
     }
 
