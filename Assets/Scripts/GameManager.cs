@@ -40,8 +40,6 @@ public class GameManager : MonoBehaviour
 
     public void PressRestart()
     {
-        this.PauseToggle();
-
         int activeSceneBuildIndex = GetActiveSceneBuildIndex();
         RestartLevel(activeSceneBuildIndex);
     }
@@ -51,6 +49,7 @@ public class GameManager : MonoBehaviour
     public void PauseToggle()
     {
         isPaused = !isPaused;
+
         this.pauseMenuUI.SetActive(isPaused);
         Time.timeScale = Convert.ToSingle(!isPaused); // false = 0 | true = 1
 
@@ -80,11 +79,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void PressMainMenu()
-    {
-        PauseToggle();
-        GoToMainMenu();
-    }
+    public void PressMainMenu() => GoToMainMenu();
 
     private void Awake()
     {
@@ -93,6 +88,11 @@ public class GameManager : MonoBehaviour
         string activeSceneName = GetActiveSceneName();
         if (activeSceneName != "Main menu")
         {
+            if (isPaused)
+            {
+                this.PauseToggle();
+            }
+
             base.StartCoroutine(this.ShowLevelStartText());
         }
     }
